@@ -10,7 +10,7 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public void purchaseTickets(Long accountId, TicketTypeRequest... ticketTypeRequests) throws InvalidPurchaseException {
-
+        System.out.println(accountId);
     }
 
 }
