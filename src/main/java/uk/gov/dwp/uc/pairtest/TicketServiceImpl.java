@@ -4,15 +4,12 @@ import thirdparty.paymentgateway.TicketPaymentService;
 import thirdparty.seatbooking.SeatReservationService;
 import uk.gov.dwp.uc.pairtest.domain.TicketTypeRequest;
 import uk.gov.dwp.uc.pairtest.exception.InvalidPurchaseException;
-import uk.gov.dwp.uc.pairtest.exception.LogEvent;
-import uk.gov.dwp.uc.pairtest.exception.TicketServiceValidator;
+import uk.gov.dwp.uc.pairtest.validation.TicketServiceValidator;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.logging.Logger;
 
-import static uk.gov.dwp.uc.pairtest.exception.LogEvent.*;
+import static uk.gov.dwp.uc.pairtest.logging.LogEvent.*;
 
 public class TicketServiceImpl implements TicketService {
 
@@ -49,15 +46,11 @@ public class TicketServiceImpl implements TicketService {
 
        if(this.ticketServiceValidator.isValidTickets(ticketTypeRequestList)) {
 
-
-
            for (TicketTypeRequest ticketTypeRequest : ticketTypeRequests) {
 
                this.totalCost += ticketTypeRequest.getTicketValue() * ticketTypeRequest.getNoOfTickets();
 
                this.reserveSeats += this.seatsToReserve( ticketTypeRequest );
-
-
            }
 
            ticketPaymentService.makePayment(accountId, this.totalCost);
