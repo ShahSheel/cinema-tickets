@@ -7,7 +7,7 @@ import java.util.List;
 
 public class TicketServiceValidator {
 
-    private static  final int MAXIMUM_PURCHASABLE_TICKETS = 10;
+    private static  final int MAXIMUM_PURCHASABLE_TICKETS = 20;
 
 
     public boolean isValidTickets(List<TicketTypeRequest> ticketTypeRequestList) {
@@ -20,11 +20,10 @@ public class TicketServiceValidator {
 
     private TicketServiceValidator purchaseLimit(List<TicketTypeRequest> ticketTypeRequestList ){
 
-        if( ticketTypeRequestList.size() >= MAXIMUM_PURCHASABLE_TICKETS)
+        if(ticketTypeRequestList.stream().mapToInt(tickets -> tickets.getNoOfTickets()).sum() >= MAXIMUM_PURCHASABLE_TICKETS )
             throw new InvalidPurchaseException("Maximum purchasable tickets is " + MAXIMUM_PURCHASABLE_TICKETS );
 
         return this;
-
     }
 
     private boolean ticketRequirements(List<TicketTypeRequest> ticketTypeRequestList ){
