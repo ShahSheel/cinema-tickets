@@ -21,19 +21,16 @@ public class TicketServiceImpl implements TicketService {
 
     private TicketPaymentService ticketPaymentService;
     private SeatReservationService seatReservationService;
-    private TicketServiceValidator ticketServiceValidator;
 
 
     public TicketServiceImpl
     (
             TicketPaymentService ticketPaymentService,
-            SeatReservationService seatReservationService,
-            TicketServiceValidator ticketServiceValidator
+            SeatReservationService seatReservationService
     )
     {
         this.ticketPaymentService = ticketPaymentService;
         this.seatReservationService = seatReservationService;
-        this.ticketServiceValidator = ticketServiceValidator;
     }
 
     /**
@@ -43,24 +40,24 @@ public class TicketServiceImpl implements TicketService {
     public void purchaseTickets(Long accountId, TicketTypeRequest... ticketTypeRequests) throws InvalidPurchaseException {
 
        List<TicketTypeRequest> ticketTypeRequestList = List.of(ticketTypeRequests);
+       TicketServiceValidator.isValidTickets(accountId, ticketTypeRequestList);
 
-       if(this.ticketServiceValidator.isValidTickets(ticketTypeRequestList)) {
 
-           for (TicketTypeRequest ticketTypeRequest : ticketTypeRequests) {
+       for (TicketTypeRequest ticketTypeRequest : ticketTypeRequests) {
 
-               this.totalCost += ticketTypeRequest.getTicketValue() * ticketTypeRequest.getNoOfTickets();
+           this.totalCost += ticketTypeRequest.getTicketValue() * ticketTypeRequest.getNoOfTickets();
 
-               this.reserveSeats += this.seatsToReserve( ticketTypeRequest );
-           }
-
-           ticketPaymentService.makePayment(accountId, this.totalCost);
-           //Log payment
-           LOG.info(String.format(PAYMENT.getMessage(), accountId, this.totalCost));
-           seatReservationService.reserveSeat(accountId, ticketTypeRequests.length);
-           // Log Reservation
-           LOG.info(String.format(RESERVE_SEATS.getMessage(), accountId, this.reserveSeats));
-
+           this.reserveSeats += this.seatsToReserve( ticketTypeRequest );
        }
+
+       ticketPaymentService.makePayment(accountId, this.totalCost);
+       //Log payment
+       LOG.info(String.format(PAYMENT.getMessage(), accountId, this.totalCost));
+
+       seatReservationService.reserveSeat(accountId, this.reserveSeats);
+       // Log Reservation
+       LOG.info(String.format(RESERVE_SEATS.getMessage(), accountId, this.reserveSeats));
+
     }
 
     private int seatsToReserve(TicketTypeRequest ticketTypeRequest){

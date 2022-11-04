@@ -10,40 +10,37 @@ public class TicketServiceValidator {
     private static  final int MAXIMUM_PURCHASABLE_TICKETS = 20;
 
 
-    public boolean isValidTickets(List<TicketTypeRequest> ticketTypeRequestList) {
+    public static void isValidTickets(Long accountId, List<TicketTypeRequest> ticketTypeRequestList) {
 
-
-       return this.purchaseLimit(ticketTypeRequestList).ticketRequirements(ticketTypeRequestList);
-
+        purchaseLimit(ticketTypeRequestList);
+        ticketRequirements(ticketTypeRequestList);
+        accountID(accountId);
 
     }
 
-    private TicketServiceValidator purchaseLimit(List<TicketTypeRequest> ticketTypeRequestList ){
+    private static void purchaseLimit(List<TicketTypeRequest> ticketTypeRequestList){
 
-        if(ticketTypeRequestList.stream().mapToInt(tickets -> tickets.getNoOfTickets()).sum() >= MAXIMUM_PURCHASABLE_TICKETS )
-            throw new InvalidPurchaseException("Maximum purchasable tickets is " + MAXIMUM_PURCHASABLE_TICKETS );
-
-        return this;
-    }
-
-    private boolean ticketRequirements(List<TicketTypeRequest> ticketTypeRequestList ){
-
-
-        for(TicketTypeRequest ticketTypeRequest : ticketTypeRequestList){
-
-            switch (ticketTypeRequest.getTicketType()) {
-               case ADULT:
-                    if(ticketTypeRequest.getNoOfTickets() <= 0 ){
-                        throw new InvalidPurchaseException("Adult ticket is mandatory");
-                    }
-                    break;
-
-               case CHILD:
-                case INFANT:
-                    break;
-            }
+        if(ticketTypeRequestList.stream().mapToInt(TicketTypeRequest::getNoOfTickets).sum() >= MAXIMUM_PURCHASABLE_TICKETS ) {
+            throw new InvalidPurchaseException("Maximum purchasable tickets is " + MAXIMUM_PURCHASABLE_TICKETS);
         }
-        return true;
+    }
+
+    private static void accountID(Long accountId){
+
+        if(accountId <= 0) {
+            throw new InvalidPurchaseException("Account number cannot be negative");
+        }
+    }
+
+
+    private static void ticketRequirements(List<TicketTypeRequest> ticketTypeRequestList){
+
+//       Can be used if requirements will not change, otherwise a switch case will be easier to maintain
+        if(ticketTypeRequestList.stream().noneMatch(ticketTypeRequest ->
+                ticketTypeRequest.getTicketType().equals(TicketTypeRequest.Type.ADULT))){
+            throw new InvalidPurchaseException("Adult is mandatory");
+
+        }
     }
 
 
