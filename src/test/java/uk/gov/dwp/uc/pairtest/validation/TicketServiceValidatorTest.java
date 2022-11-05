@@ -31,28 +31,28 @@ public class TicketServiceValidatorTest{
 
     private static final long ACCOUNT_ID = 12345L;
 
-    @Test (expected = InvalidPurchaseException.class)
-    public void expect_exception_when_tickets_is_over_twenty() {
-
-        TicketTypeRequest adult = new TicketTypeRequest(TicketTypeRequest.Type.ADULT, 21);
-        TicketTypeRequest child = new TicketTypeRequest(TicketTypeRequest.Type.INFANT, 1);
-
-        ticketService.purchaseTickets(ACCOUNT_ID, adult, child );
-
-        verify(ticketPaymentService, times(1)).makePayment(ACCOUNT_ID, 60);
-        verify(seatReservationService, times(1)).reserveSeat(ACCOUNT_ID, 4);
-    }
-
-    @Test (expected = InvalidPurchaseException.class)
-    public void expect_exception_when_no_adult_is_requesting() {
-
-        TicketTypeRequest child = new TicketTypeRequest(TicketTypeRequest.Type.CHILD, 2);
-        TicketTypeRequest infant = new TicketTypeRequest(TicketTypeRequest.Type.INFANT, 1);
-
-        ticketService.purchaseTickets(ACCOUNT_ID, child, infant);
-
-        verify(ticketPaymentService, times(1)).makePayment(ACCOUNT_ID, 2);
-        verify(seatReservationService, times(1)).reserveSeat(ACCOUNT_ID, 4);
-    }
+//    @Test (expected = InvalidPurchaseException.class)
+//    public void expect_exception_when_tickets_is_over_twenty() {
+//
+//        TicketTypeRequest adult = new TicketTypeRequest(TicketTypeRequest.Type.ADULT, 21);
+//        TicketTypeRequest child = new TicketTypeRequest(TicketTypeRequest.Type.INFANT, 1);
+//
+//        ticketService.purchaseTickets(ACCOUNT_ID, adult, child );
+//
+//        verify(ticketPaymentService, times(1)).makePayment(ACCOUNT_ID, 60);
+//        verify(seatReservationService, times(1)).reserveSeat(ACCOUNT_ID, 4);
+//    }
+//
+//    @Test (expected = InvalidPurchaseException.class)
+//    public void expect_exception_when_no_adult_is_requesting() {
+//
+//        TicketTypeRequest child = new TicketTypeRequest(TicketTypeRequest.Type.CHILD, 2);
+//        TicketTypeRequest infant = new TicketTypeRequest(TicketTypeRequest.Type.INFANT, 1);
+//
+//        ticketService.purchaseTickets(ACCOUNT_ID, child, infant);
+//
+//        verify(ticketPaymentService, times(1)).makePayment(ACCOUNT_ID, 2);
+//        verify(seatReservationService, times(1)).reserveSeat(ACCOUNT_ID, 4);
+//    }
 
 }
