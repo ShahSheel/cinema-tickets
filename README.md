@@ -1,6 +1,10 @@
 # cinema-tickets
 
-Set up
+## Envionment
+
+```
+Java 17
+```
 
 ## Maven
 
